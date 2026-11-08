@@ -60,10 +60,12 @@ else()
             -DVTK_USE_QVTK_QTOPENGL:BOOL=ON
             -DVTK_Group_Qt:BOOL=ON 
             -DQt5_DIR=${Qt5_DIR}
+            -DBUILD_TESTING:BOOL=OFF
+            -DBUILD_EXAMPLES:BOOL=OFF
     )
 endif()
 
-#OpenIGTLink: 
+#OpenIGTLink:
 if(Use_System_OpenIGTLink)
     find_package(OpenIGTLink REQUIRED)
     include_directories(${OpenIGTLink_INCLUDE_DIRS})
@@ -81,6 +83,8 @@ else()
         CMAKE_ARGS 
             -DCMAKE_INSTALL_PREFIX=${OpenIGTLink_Install}
             -DBUILD_SHARED_LIBS:BOOL=ON
+            -DBUILD_TESTING:BOOL=OFF
+            -DBUILD_EXAMPLES:BOOL=OFF
     )
 endif()
 
@@ -123,7 +127,10 @@ else(Use_System_OpenCV)
                 -DCMAKE_INSTALL_PREFIX=${OpenCV_Install}
                 -DBUILD_JAVA:BOOL=OFF
                 -DBUILD_SHARED_LIBS:BOOL=ON
-                -DBUILD_opencv_legacy=OFF 
+                -DBUILD_opencv_legacy=OFF
+                -DBUILD_TESTS:BOOL=OFF
+                -DBUILD_PERF_TESTS:BOOL=OFF
+                -DBUILD_EXAMPLES:BOOL=OFF
                 -DOPENCV_DNN_CUDA:BOOL=ON
                 -DWITH_CUDA:BOOL=ON
                 -DOPENCV_EXTRA_MODULES_PATH=${OpenCV_Extra}/src/OpenCVContrib/modules 
@@ -141,7 +148,10 @@ else(Use_System_OpenCV)
                 -DCMAKE_INSTALL_PREFIX=${OpenCV_Install}
                 -DBUILD_JAVA:BOOL=OFF
                 -DBUILD_SHARED_LIBS:BOOL=ON
-                -DBUILD_opencv_legacy=OFF 
+                -DBUILD_opencv_legacy=OFF
+                -DBUILD_TESTS:BOOL=OFF
+                -DBUILD_PERF_TESTS:BOOL=OFF
+                -DBUILD_EXAMPLES:BOOL=OFF
         )
     endif()
 endif(Use_System_OpenCV)
@@ -169,5 +179,6 @@ if(Use_System_Qt5)
             -DCTK_LIB_DICOM/Core:BOOL=ON
             -DCTK_LIB_DICOM/Widgets:BOOL=ON
             -DCTK_LIB_PluginFramework:BOOL=OFF
+            -DBUILD_TESTING:BOOL=OFF
     )
 endif()
