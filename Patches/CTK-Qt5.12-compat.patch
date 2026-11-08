@@ -1,0 +1,52 @@
+diff --git a/Libs/Core/ctkUtils.cpp b/Libs/Core/ctkUtils.cpp
+index d9859498..df02c1ed 100644
+--- a/Libs/Core/ctkUtils.cpp
++++ b/Libs/Core/ctkUtils.cpp
+@@ -119,7 +119,11 @@ QStringList ctk::nameFilterToExtensions(const QString& nameFilter)
+     return QStringList();
+   }
+   QString f = m.captured(2);
++#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+   return f.split(QLatin1Char(' '), Qt::SkipEmptyParts);
++#else
++  return f.split(QLatin1Char(' '), QString::SkipEmptyParts);
++#endif
+ }
+ 
+ //-----------------------------------------------------------------------------
+diff --git a/Libs/DICOM/Core/ctkDICOMPatientModel.cpp b/Libs/DICOM/Core/ctkDICOMPatientModel.cpp
+index ec00d35e..30663362 100644
+--- a/Libs/DICOM/Core/ctkDICOMPatientModel.cpp
++++ b/Libs/DICOM/Core/ctkDICOMPatientModel.cpp
+@@ -40,6 +40,7 @@
+ #include "ctkDICOMStudyFilterProxyModel.h"
+ #include "ctkDICOMJobResponseSet.h"
+ #include "ctkDICOMJob.h"
++#include "ctkUtils.h"
+ 
+ static ctkLogger logger("org.commontk.DICOM.Core.ctkDICOMPatientModel");
+ 
+@@ -230,7 +231,7 @@ void ctkDICOMPatientModelPrivate::populatePatients()
+   }
+ 
+   // Create a set of database patient items
+-  QSet<QString> validPatientUIDs = QSet<QString>(patientUIDs.begin(), patientUIDs.end());
++  QSet<QString> validPatientUIDs = ctk::qStringListToQSet(patientUIDs);
+   QList<PatientData> newPatients;
+ 
+   foreach (const QString& patientUID, patientUIDs)
+diff --git a/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp b/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp
+index aa78e98e..a9d34a28 100644
+--- a/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp
++++ b/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp
+@@ -350,8 +350,8 @@ void ctkDICOMVisualBrowserWidgetPrivate::init()
+   QStringList allModalities = ctkDICOMModalities::AllModalities;
+   QStringList commonModalities = ctkDICOMModalities::CommonImagingModalities;
+ 
+-  QSet<QString> otherModalitiesSet = QSet<QString>(allModalities.begin(), allModalities.end());
+-  otherModalitiesSet.subtract(QSet<QString>(commonModalities.begin(), commonModalities.end()));
++  QSet<QString> otherModalitiesSet = ctk::qStringListToQSet(allModalities);
++  otherModalitiesSet.subtract(ctk::qStringListToQSet(commonModalities));
+   otherModalitiesSet.remove("Any");
+   QStringList otherModalities = otherModalitiesSet.values();
+   otherModalities.sort();

@@ -168,7 +168,13 @@ if(Use_System_Qt5)
         SOURCE_DIR ${CTK_Repo}
         BINARY_DIR ${CTK_DIR}
         GIT_REPOSITORY https://github.com/commontk/CTK.git
-        CMAKE_ARGS 
+        # CTK master pinned to a known commit, patched to build with Qt 5.12 (some code assumes Qt >= 5.14).
+        # When moving to Qt 5.15+, the patch can be dropped; bump GIT_TAG only together with the patch.
+        GIT_TAG d3a09b063cd3353ae7304b8604ed83632013a909
+        UPDATE_COMMAND ""
+        PATCH_COMMAND ${CMAKE_COMMAND} -DPATCH_FILE=${CMAKE_CURRENT_SOURCE_DIR}/Patches/CTK-Qt5.12-compat.patch
+                      -P ${CMAKE_CURRENT_SOURCE_DIR}/Patches/ApplyGitPatch.cmake
+        CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${CTK_Install}
             -DCTK_QT_VERSION:STRING=5
             -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
