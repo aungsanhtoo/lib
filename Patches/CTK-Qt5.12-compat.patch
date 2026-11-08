@@ -35,6 +35,20 @@ index ec00d35e..30663362 100644
    QList<PatientData> newPatients;
  
    foreach (const QString& patientUID, patientUIDs)
+diff --git a/Libs/DICOM/Widgets/ctkDICOMServerNodeWidget.cpp b/Libs/DICOM/Widgets/ctkDICOMServerNodeWidget.cpp
+index 47b7a36d..431cf973 100644
+--- a/Libs/DICOM/Widgets/ctkDICOMServerNodeWidget.cpp
++++ b/Libs/DICOM/Widgets/ctkDICOMServerNodeWidget.cpp
+@@ -316,7 +316,8 @@ QMap<QString, QVariant> ctkDICOMServerNodeWidget::serverNodeParameters(const QSt
+   {
+     if ( d->NodeTable->item(row,0)->text() == node )
+     {
+-      parameters.insert(this->serverNodeParameters(row));
++      // QMap::insert(const QMap&) requires Qt >= 5.15; 'parameters' is empty here, so assign.
++      parameters = this->serverNodeParameters(row);
+       break;
+     }
+   }
 diff --git a/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp b/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp
 index aa78e98e..a9d34a28 100644
 --- a/Libs/DICOM/Widgets/ctkDICOMVisualBrowserWidget.cpp
